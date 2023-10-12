@@ -44,14 +44,19 @@ templates = Jinja2Templates(directory=os.path.join(project_dir, 'frontend', 'tem
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
     if current_user is None:
         # If the user is not authenticated, redirect to the login page
-        return RedirectResponse(url="/login", status_code=HTTP_303_SEE_OTHER)  # Use HTTP_303_SEE_OTHER instead of status.HTTP_303_SEE_OTHER
+        return RedirectResponse(url="/login", status_code=HTTP_303_SEE_OTHER)  
     
     # If the user is authenticated, display the dashboard
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @app.get("/login", response_class=HTMLResponse)
-async def read_root(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
+    if current_user is None:
+        # If the user is not authenticated, redirect to the login page
+        return templates.TemplateResponse("login.html", {"request": request})
+    
+    # If the user is authenticated, display the dashboard
+    return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 
 @app.get("/register", response_class=HTMLResponse)
 async def read_root(request: Request):
