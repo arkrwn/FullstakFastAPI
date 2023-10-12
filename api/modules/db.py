@@ -18,6 +18,7 @@ client = AsyncIOMotorClient(Config.MONGO_HOST)
 db = client[Config.DB_NAME]
 collection = db[Config.COLLECTION_NAME]
 
+# Users function
 async def save_user(user_data):
     try:
         result = await collection.insert_one(user_data)
@@ -29,13 +30,12 @@ async def fetch_all_users():
     cursor = collection.find()
     users = []
     async for document in cursor:
-        document["_id"] = str(document["_id"])  # Convert ObjectId to str
+        document["_id"] = str(document["_id"])
         users.append(document)
     return users
 
-# Updated get_user_by_email function
 async def get_user_by_email(email: str):
     document = await collection.find_one({"email": email})
     if document is not None:
-        document["_id"] = str(document["_id"])  # Convert ObjectId to str
+        document["_id"] = str(document["_id"])
     return document

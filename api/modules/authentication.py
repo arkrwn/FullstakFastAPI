@@ -1,7 +1,7 @@
 # File: api/modules/authentication.py
 
 from starlette.requests import Request
-from .db import get_user_by_email  # Importing the function from db.py
+from .db import get_user_by_email
 
 def get_current_user(request: Request):
     email = request.session.get("user_email")
@@ -19,4 +19,4 @@ async def get_user_name(request: Request):
     if user is None:
         return None  # User data could not be found, consider this as not authenticated
 
-    return user["fullname"]  # Assuming the user data has a 'name' field
+    return user["fullname"]
