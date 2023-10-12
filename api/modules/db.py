@@ -33,6 +33,9 @@ async def fetch_all_users():
         users.append(document)
     return users
 
+# Updated get_user_by_email function
 async def get_user_by_email(email: str):
     document = await collection.find_one({"email": email})
+    if document is not None:
+        document["_id"] = str(document["_id"])  # Convert ObjectId to str
     return document

@@ -1,12 +1,22 @@
 # File: api/modules/authentication.py
 
 from starlette.requests import Request
+from .db import get_user_by_email  # Importing the function from db.py
 
 def get_current_user(request: Request):
-    # Replace this with your actual session authentication logic
-    # You may need to access the session data or cookies to check authentication
-    # For example, you can check if a user ID is present in the session data
     email = request.session.get("user_email")
     if email is None:
         return None  # User is not authenticated
     return email  # Return the authenticated user
+
+# Update to async function to await get_user_by_email
+async def get_user_name(request: Request):
+    email = request.session.get("user_email")
+    if email is None:
+        return None  # User is not authenticated
+
+    user = await get_user_by_email(email)  # Awaiting the asynchronous function
+    if user is None:
+        return None  # User data could not be found, consider this as not authenticated
+
+    return user["fullname"]  # Assuming the user data has a 'name' field

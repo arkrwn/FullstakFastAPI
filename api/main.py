@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.status import HTTP_303_SEE_OTHER
-from .modules.authentication import get_current_user
+from .modules.authentication import get_current_user, get_user_name
 from .models.users import RegistrationForm
 from .routes.session import router as session_router
 
@@ -46,8 +46,9 @@ async def read_root(request: Request, current_user: dict = Depends(get_current_u
         # If the user is not authenticated, redirect to the login page
         return RedirectResponse(url="/login", status_code=HTTP_303_SEE_OTHER)  
     
+    user_name = await get_user_name(request)
     # If the user is authenticated, display the dashboard
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+    return templates.TemplateResponse("dashboard.html", {"request": request, "user_name": user_name})
 
 @app.get("/login", response_class=HTMLResponse)
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
