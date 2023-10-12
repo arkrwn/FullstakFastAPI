@@ -1,7 +1,8 @@
 # File: api/routes/session.py
 
+import logging
 from fastapi import APIRouter, Form, HTTPException, status, Request
-from starlette.responses import RedirectResponse
+from fastapi.responses import RedirectResponse
 from ..models.users import RegistrationForm, LoginForm
 from ..modules.db import fetch_all_users, save_user, get_user_by_email
 from ..modules.encryption import hash_password, verify_password
@@ -41,9 +42,17 @@ async def handle_login(
         remember_me: bool = Form(False)):
     user = await get_user_by_email(email)
     if user is None or not verify_password(password, user["password"]):
+        logging.error("Login failed")
         response = RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
-        # Add a session variable to indicate login failure
         request.session["login_error"] = "Invalid credentials"
         return response
+    logging.info("Login successful")
+    request.session["user_email"] = user["email"]  # Storing user email in session
     response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     return response
+
+
+@router.get("/logout")
+async def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/login")
