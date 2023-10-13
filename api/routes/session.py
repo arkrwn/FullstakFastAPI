@@ -32,7 +32,8 @@ async def handle_registration(
     if not form_data.terms_and_conditions:
         raise HTTPException(status_code=400, detail="You must accept the terms and conditions")
     inserted_id = await save_user(form_data.dict())
-    return {"message": "User registered successfully", "_id": str(inserted_id)}
+    registered = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    return registered
 
 @router.post("/login-user")
 async def handle_login(
