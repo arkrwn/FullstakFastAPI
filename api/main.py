@@ -11,9 +11,11 @@ from starlette.status import HTTP_303_SEE_OTHER
 from .modules.authentication import get_current_user, get_user_name
 from .models.users import RegistrationForm
 from .routes.session import router as session_router
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
+current_year = datetime.now().year
 
 app = FastAPI(docs_url="/docs", redoc_url="/redoc")
 
@@ -48,7 +50,7 @@ async def read_root(request: Request, current_user: dict = Depends(get_current_u
     
     user_name = await get_user_name(request)
     # If the user is authenticated, display the dashboard
-    return templates.TemplateResponse("dashboard.html", {"request": request, "user_name": user_name})
+    return templates.TemplateResponse("dashboard.html", {"request": request, "user_name": user_name, "current_year": current_year})
 
 @app.get("/login", response_class=HTMLResponse)
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
@@ -77,7 +79,7 @@ async def read_file(filename: str, request: Request, current_user: dict = Depend
     
     if filename in available_files:
         user_name = await get_user_name(request)
-        return templates.TemplateResponse(f"{filename}.html", {"request": request, "user_name": user_name})
+        return templates.TemplateResponse(f"{filename}.html", {"request": request, "user_name": user_name, "current_year": current_year})
     else:
         # If the filename is not in the list of available files, return a 404 Not Found error
         return HTMLResponse(status_code=404, content="<html><body><h1>404 Not Found</h1></body></html>")
