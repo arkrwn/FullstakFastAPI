@@ -62,3 +62,22 @@ async def read_root(request: Request, current_user: dict = Depends(get_current_u
 @app.get("/register", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
+
+@app.get("/{filename}", response_class=HTMLResponse)
+async def read_file(filename: str, request: Request, current_user: dict = Depends(get_current_user)):
+    if current_user is None:
+        # If the user is not authenticated, redirect to the login page
+        return RedirectResponse(url="/login", status_code=HTTP_303_SEE_OTHER)
+    
+    # List of available HTML files
+    available_files = [
+        "buttons", "cards", "charts", "form-elements", 
+        "icons", "page", "tables", "typography"
+    ]
+    
+    if filename in available_files:
+        user_name = await get_user_name(request)
+        return templates.TemplateResponse(f"{filename}.html", {"request": request, "user_name": user_name})
+    else:
+        # If the filename is not in the list of available files, return a 404 Not Found error
+        return HTMLResponse(status_code=404, content="<html><body><h1>404 Not Found</h1></body></html>")

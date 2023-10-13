@@ -18,6 +18,7 @@ client = AsyncIOMotorClient(Config.MONGO_HOST)
 db = client[Config.DB_NAME]
 collection = db[Config.COLLECTION_NAME]
 
+
 # Users function
 async def save_user(user_data):
     try:
