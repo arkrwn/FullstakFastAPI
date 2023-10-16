@@ -40,7 +40,7 @@ app.mount("/theme-assets", StaticFiles(directory=os.path.join(project_dir, 'fron
 app.mount("/favicon.ico", StaticFiles(directory=os.path.join(project_dir, 'frontend', 'theme-assets')), name="favicon")
 
 # Set up templates with absolute paths
-templates = Jinja2Templates(directory=os.path.join(project_dir, 'frontend', 'templates'))
+templates = Jinja2Templates(directory=os.path.join(project_dir, 'frontend', 'pages'))
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
