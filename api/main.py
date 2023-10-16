@@ -74,7 +74,7 @@ async def read_file(filename: str, request: Request, current_user: dict = Depend
     # List of available HTML files
     available_files = [
         "buttons", "cards", "charts", "form-elements", 
-        "icons", "page", "tables", "typography"
+        "icons", "page", "tables", "typography", "profiles"
     ]
     
     if filename in available_files:
