@@ -24,7 +24,7 @@ async def list_users():
 async def show_signin_form(request: Request, current_user: dict = Depends(get_current_user)):
     if current_user is None:
         return authPages.TemplateResponse("sign-in.html", {"request": request})
-    return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 @session.get("/auth/register", response_class=HTMLResponse)
 async def show_registration_form(request: Request):
@@ -53,7 +53,7 @@ async def handle_login(request: Request, email: str = Form(...), password: str =
     if user is None or not verify_password(password, user["password"]):
         logging.error("Login failed")
         request.session["login_error"] = "Invalid credentials"
-        return redirect_with_status("/login")
+        return redirect_with_status("/auth/signin")
     logging.info("Login successful")
     request.session["user_email"] = user["email"]  # Storing user email in session
     return redirect_with_status("/")

@@ -20,8 +20,7 @@ async def read_documentations(request: Request):
 @dashboard.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
     if current_user is None:
-        return RedirectResponse(url="/auth/sign-in", status_code=status.HTTP_303_SEE_OTHER)
-
+        return RedirectResponse(url="/auth/signin", status_code=status.HTTP_303_SEE_OTHER)
     return dashboardPages.TemplateResponse("index.html", {"request": request})
     
 @dashboard.get("/{path:path}/{filename}", response_class=HTMLResponse)
