@@ -3,6 +3,10 @@
 import os
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
+from ..config import setup_logging
+
+# Initialize logging
+setup_logging()
 
 # Load .env file
 env_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
