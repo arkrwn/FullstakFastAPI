@@ -49,7 +49,11 @@
                   <div class="col-md-10">
                      <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
                         <div class="card-body">
+                           {% if login_error %}
+                           <p class="alert alert-danger">{{ login_error }}</p>
+                           {% else %}
                            <h2 class="mb-2 text-center">Sign In</h2>
+                           {% endif %}
 
                            <form action="/auth/user-signin" method="post">
                               <div class="row">
@@ -73,11 +77,11 @@
                                           name="remember_me">
                                        <label class="form-check-label" for="customCheck1">Remember Me</label>
                                     </div>
-                                    <a href="recoverpw.html">Forgot Password?</a>
+                                    <a href="/forgot-password">Forgot Password?</a>
                                  </div>
                               </div>
                               <div class="d-flex justify-content-center">
-                                 <button type="submit" class="btn btn-primary">Sign In</button>
+                                 <button type="submit" class="btn btn-outline-primary">Sign In</button>
                               </div>
                               <p class="text-center my-3">or sign in with other accounts?</p>
                               <div class="d-flex justify-content-center">
@@ -153,7 +157,6 @@
 
    <!-- App Script -->
    <script src="../../assets/js/hope-ui.js" defer></script>
-
 
 </body>
 

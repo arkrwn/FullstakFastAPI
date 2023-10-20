@@ -22,8 +22,9 @@ async def list_users():
 
 @session.get("/auth/signin", response_class=HTMLResponse)
 async def show_signin_form(request: Request, current_user: dict = Depends(get_current_user)):
+    login_error = request.session.pop("login_error", None)
     if current_user is None:
-        return authPages.TemplateResponse("sign-in.html", {"request": request})
+        return authPages.TemplateResponse("sign-in.html", {"request": request, "login_error": login_error})
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 @session.get("/auth/register", response_class=HTMLResponse)
