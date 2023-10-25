@@ -92,49 +92,48 @@
                            </a>
                            <h2 class="mb-2 text-center">Sign Up</h2>
                            <p class="text-center">Create your Hope UI account.</p>
-                           <form>
+                           <form action="/auth/user-register" method="post" onsubmit="return validateForm()">
                               <div class="row">
-                                 <div class="col-lg-6">
+                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                       <label for="full-name" class="form-label">Full Name</label>
-                                       <input type="text" class="form-control" id="full-name" placeholder=" ">
-                                    </div>
-                                 </div>
-                                 <div class="col-lg-6">
-                                    <div class="form-group">
-                                       <label for="last-name" class="form-label">Last Name</label>
-                                       <input type="text" class="form-control" id="last-name" placeholder=" ">
+                                       <label for="fullname" class="form-label">Full Name</label>
+                                       <input type="text" class="form-control" id="fullname" name="fullname"
+                                          placeholder=" ">
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label for="email" class="form-label">Email</label>
-                                       <input type="email" class="form-control" id="email" placeholder=" ">
+                                       <input type="email" class="form-control" id="email" name="email" placeholder=" ">
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
                                     <div class="form-group">
-                                       <label for="phone" class="form-label">Phone No.</label>
-                                       <input type="text" class="form-control" id="phone" placeholder=" ">
+                                       <label for="contact_no" class="form-label">Phone No.</label>
+                                       <input type="text" class="form-control" id="contact_no" name="contact_no"
+                                          placeholder=" ">
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label for="password" class="form-label">Password</label>
-                                       <input type="password" class="form-control" id="password" placeholder=" ">
+                                       <input type="password" class="form-control" id="password" name="password"
+                                          placeholder=" ">
                                     </div>
                                  </div>
                                  <div class="col-lg-6">
                                     <div class="form-group">
                                        <label for="confirm-password" class="form-label">Confirm Password</label>
-                                       <input type="text" class="form-control" id="confirm-password" placeholder=" ">
+                                       <input type="password" class="form-control" id="confirm-password"
+                                          placeholder=" ">
                                     </div>
                                  </div>
                                  <div class="col-lg-12 d-flex justify-content-center">
                                     <div class="form-check mb-3">
-                                       <input type="checkbox" class="form-check-input" id="customCheck1">
-                                       <label class="form-check-label" for="customCheck1">I agree with the terms of
-                                          use</label>
+                                       <input type="checkbox" class="form-check-input" id="terms_and_conditions"
+                                          name="terms_and_conditions" value="true">
+                                       <label class="form-check-label" for="terms_and_conditions">I agree with the terms
+                                          of use</label>
                                     </div>
                                  </div>
                               </div>
@@ -198,6 +197,19 @@
    <!-- App Script -->
    <script src="../../assets/js/hope-ui.js" defer></script>
 
+   <script>
+      function validateForm() {
+         var password = document.getElementById("password").value;
+         var confirmPassword = document.getElementById("confirm-password").value;
+
+         if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return false;
+         }
+
+         return true;
+      }
+   </script>
 
 </body>
 
