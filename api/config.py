@@ -5,10 +5,12 @@ import logging
 from datetime import datetime
 from fastapi.templating import Jinja2Templates
 
+webTitle = "ARKWRN"
 current_year = datetime.now().year
 project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-dashboardPages = Jinja2Templates(directory=os.path.join(project_dir, 'frontend', 'dashboard'))
-authPages = Jinja2Templates(directory=os.path.join(project_dir, 'frontend', 'dashboard', 'auth'))
+frontendDirectory=os.path.join(project_dir, 'frontend')
+dashboardPages = Jinja2Templates(os.path.join(frontendDirectory, 'dashboard'))
+authPages = Jinja2Templates(os.path.join(frontendDirectory, 'dashboard', 'auth'))
 
 def setup_logging():
     logging.basicConfig(level=logging.ERROR)

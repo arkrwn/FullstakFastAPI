@@ -4,8 +4,9 @@ import os
 from pathlib import Path
 from fastapi import APIRouter, Request, Depends, status, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
-from ..modules.authentication import get_current_user
-from ..config import dashboardPages, setup_logging
+from fastapi.templating import Jinja2Templates
+from api.modules.authentication import get_current_user
+from api.config import frontendDirectory, dashboardPages, setup_logging, webTitle
 
 # Initialize logging
 setup_logging()
@@ -15,28 +16,30 @@ dashboard = APIRouter()
 # USE THIS DURING DEVELOPMENT ONLY
 @dashboard.get("/documentations", response_class=HTMLResponse)
 async def read_documentations(request: Request):
-    return dashboardPages.TemplateResponse("documentations.html", {"request": request})
+    pageTitle = f"{webTitle} | Documentations"
+    return dashboardPages.TemplateResponse("documentations.html", {"request": request, "title": webTitle})
 
 @dashboard.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
     if current_user is None:
         return RedirectResponse(url="/auth/signin", status_code=status.HTTP_303_SEE_OTHER)
-    return dashboardPages.TemplateResponse("index.html", {"request": request})
+    pageTitle = f"{webTitle} | index".upper()
+    return dashboardPages.TemplateResponse("index.html", {"request": request, "title": pageTitle})
     
 @dashboard.get("/{path:path}/{filename}", response_class=HTMLResponse)
-async def read_file(path: str, filename: str, current_user: dict = Depends(get_current_user)):
+async def read_file(request: Request, path: str, filename: str, current_user: dict = Depends(get_current_user)):
     if current_user is None:
         return RedirectResponse(url="/auth/signin", status_code=status.HTTP_303_SEE_OTHER)
-    
-    # Construct the path to the file
-    path_str = os.path.join("frontend", path, f"{filename}.html")
-    path = Path(path_str)
-    
-    # Verify if the file exists
-    if not path.exists() or not path.is_file():
+
+    # Compute the dynamic directory based on request
+    dynamic_dir = os.path.join(frontendDirectory, path)
+
+    # Initialize Jinja2Templates with the dynamic directory
+    dynamicPages = Jinja2Templates(directory=dynamic_dir)
+    file_path = f"{filename}.html"
+    pageTitle = f"{webTitle} | {filename}".upper()
+
+    try:
+        return dynamicPages.TemplateResponse(file_path, {"request": request, "title": pageTitle})
+    except Exception as e:
         raise HTTPException(status_code=404, detail="File not found")
-    
-    # Read and return the HTML content
-    with open(path, "r") as f:
-        content = f.read()
-    return HTMLResponse(content=content)
