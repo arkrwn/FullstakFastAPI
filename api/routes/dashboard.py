@@ -19,6 +19,15 @@ async def read_documentations(request: Request):
     pageTitle = f"{webTitle} | Documentations"
     return dashboardPages.TemplateResponse("documentations.html", {"request": request, "title": webTitle})
 
+@dashboard.get("/errors/{error_code}", response_class=HTMLResponse)
+async def read_error(request: Request, error_code: int):
+    if error_code not in [404, 500, 503]:
+        raise HTTPException(status_code=404, detail="Error page not found")
+    
+    pageTitle = f"{webTitle} | Errors"
+    template_name = f"error{error_code}.html"
+    return dashboardPages.TemplateResponse(template_name, {"request": request, "title": pageTitle})
+
 @dashboard.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, current_user: dict = Depends(get_current_user)):
     if current_user is None:
