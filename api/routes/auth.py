@@ -8,17 +8,30 @@ from api.models.users import RegistrationForm, LoginForm
 from api.modules.db import fetch_all_users, save_user, get_user_by_email, get_user_count
 from api.modules.encryption import hash_password, verify_password
 from api.modules.authentication import get_current_user
-from api.config import authPages, setup_logging
+from api.config import authPages, setup_logging, debugStatus
 
 # Initialize logging
 setup_logging()
 
 session = APIRouter()
 
+def is_debug_mode() -> None:
+    if debugStatus != "True":
+        raise HTTPException(status_code=403, detail="Only accessible in Development Mode")
+
+# USED FOR DEVELOPMENT ONLY
 @session.get("/auth/users")
-async def list_users():
+async def list_users(is_debug: None = Depends(is_debug_mode)):
     users = await fetch_all_users()
     return {"users": users}
+
+@session.get("/auth/users/{email}")
+async def list_single_users(email: str, is_debug: None = Depends(is_debug_mode)):
+    user = await get_user_by_email(email)
+    if user:
+        user.pop('password', None)
+        user.pop('_id', None)
+    return {"user": user}
 
 @session.get("/auth/signin", response_class=HTMLResponse)
 async def show_signin_form(request: Request, current_user: dict = Depends(get_current_user)):

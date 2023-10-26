@@ -46,6 +46,8 @@ async def fetch_all_users():
     users = []
     async for document in cursor:
         document["_id"] = str(document["_id"])
+        document.pop('password', None)  # Remove the 'password' field
+        document.pop('_id', None)  # Remove the 'password' field
         users.append(document)
     return users
 
