@@ -31,8 +31,6 @@ async def save_user(user_data):
     try:
         user_data.update({
             "user_profile_picture": "",
-            "groups": "users",
-            "permission": "ALL",
             "register_date": datetime.utcnow(),
             "status": "active",
             "two_factor": "disabled",
@@ -56,3 +54,11 @@ async def get_user_by_email(email: str):
     if document is not None:
         document["_id"] = str(document["_id"])
     return document
+
+async def get_user_count():
+    try:
+        count = await collection_users.count_documents({})
+        return count
+    except Exception as e:
+        print(f"Failed to get user count: {e}")
+        raise

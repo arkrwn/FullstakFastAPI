@@ -50,6 +50,8 @@ python3 app.py
 
 Open your web browser and navigate to http://localhost:8000 to access the application.
 
+You need to access register page first to register user, first user always set as admin
+
 ### Database Setup
 
 Ensure MongoDB is running on your machine. You can use a MongoDB GUI like MongoDB Compass to create a new database and collections as per your application schema.

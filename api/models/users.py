@@ -10,8 +10,8 @@ class RegistrationForm(BaseModel):
     password: str
     terms_and_conditions: bool
     user_profile_picture: str = ""
-    groups: str = "users"
-    permission: str = "ALL"
+    groups: str
+    permission: str
     register_date: datetime = datetime.utcnow()
     status: str = "active"
     two_factor: str = "disabled"

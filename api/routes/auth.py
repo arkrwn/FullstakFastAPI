@@ -4,11 +4,11 @@ import os
 import logging
 from fastapi import APIRouter, Form, HTTPException, status, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
-from ..models.users import RegistrationForm, LoginForm
-from ..modules.db import fetch_all_users, save_user, get_user_by_email
-from ..modules.encryption import hash_password, verify_password
-from ..modules.authentication import get_current_user
-from ..config import authPages, setup_logging
+from api.models.users import RegistrationForm, LoginForm
+from api.modules.db import fetch_all_users, save_user, get_user_by_email, get_user_count
+from api.modules.encryption import hash_password, verify_password
+from api.modules.authentication import get_current_user
+from api.config import authPages, setup_logging
 
 # Initialize logging
 setup_logging()
@@ -43,8 +43,28 @@ async def handle_registration(
         terms_and_conditions: bool = Form(...)):
     if not terms_and_conditions:
         raise HTTPException(status_code=400, detail="You must accept the terms and conditions")
+    
     hashed_password = hash_password(password)
-    form_data = RegistrationForm(fullname=fullname, contact_no=contact_no, email=email, password=hashed_password, terms_and_conditions=terms_and_conditions)
+    
+    # If first user, make them admin
+    user_count = await get_user_count()
+    if user_count == 0:
+        baseGroup = "admin"
+        basePermission = "all"
+    else:
+        baseGroup = "users"
+        basePermission = "basic"
+
+    form_data = RegistrationForm(
+        fullname=fullname,
+        contact_no=contact_no,
+        email=email,
+        password=hashed_password,
+        terms_and_conditions=terms_and_conditions,
+        groups=baseGroup,
+        permission=basePermission
+    )
+
     await save_user(form_data.dict())
     return redirect_with_status("/")
 
