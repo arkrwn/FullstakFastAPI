@@ -37,8 +37,7 @@ Create a .env file in the root directory of the project, and add the following e
 ```
 MONGO_HOST=mongodb://localhost:27017
 DB_NAME=FullstackFastAPI
-COLLECTION_NAME=users
-CLIENT_SECRET=RANDOMSEKRETDOANGINIMAH
+CLIENT_SECRET=RANDOMSEKRETDOANGINIMAHTAPIKUDU32
 ```
 
 ### Running the Application
@@ -50,6 +49,8 @@ python3 app.py
 ```
 
 Open your web browser and navigate to http://localhost:8000 to access the application.
+
+You need to access register page first to register user, first user always set as admin
 
 ### Database Setup
 
